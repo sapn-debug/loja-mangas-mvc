@@ -44,7 +44,7 @@ class AuthController:
             return True, "Conta criada e login realizado com sucesso!"
 
         except Exception as e:
-            # Aqui é onde o erro real vai aparecer no terminal para nós
+            # Log no Render para você identificar o erro
             print("\n" + "="*40)
             print("--- ERRO REAL DO SUPABASE AO CADASTRAR ---")
             print(e)
@@ -72,7 +72,9 @@ class AuthController:
             self.usuario_atual = {"id": resp.user.id, "email": resp.user.email}
             self.perfil = self.perfil_model.buscar_por_user_id(resp.user.id) or {"nome": "Usuário"}
             return True, "Login realizado com sucesso!"
-        except Exception:
+        except Exception as e:
+            # Log no Render para você identificar o erro
+            print(f"\n--- ERRO AO FAZER LOGIN --- \n{e}\n")
             return False, "E-mail ou senha inválidos."
 
     def logout(self):

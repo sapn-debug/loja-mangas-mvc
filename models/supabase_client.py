@@ -1,14 +1,13 @@
 import os
-from dotenv import load_dotenv
 from supabase import create_client, Client
 
-load_dotenv()
-
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
-
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Variáveis de ambiente do Supabase não configuradas.")
-
 def get_client() -> Client:
-    return create_client(SUPABASE_URL, SUPABASE_KEY)
+    # Pega as variáveis de ambiente configuradas no Render
+    url = os.environ.get("SUPABASE_URL")
+    key = os.environ.get("SUPABASE_KEY")
+    
+    # Validação para evitar erro se esquecer de configurar no Render
+    if not url or not key:
+        raise ValueError("ERRO: As variáveis SUPABASE_URL e SUPABASE_KEY não estão configuradas no ambiente.")
+        
+    return create_client(url, key)
