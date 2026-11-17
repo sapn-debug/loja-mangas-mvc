@@ -43,4 +43,4 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     porta = int(os.environ.get("PORT", 8080))
-    ft.run(main, view=ft.AppView.WEB_BROWSER, host="127.0.0.1", port=porta)
+    ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=porta)
