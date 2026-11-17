@@ -43,10 +43,4 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     porta = int(os.environ.get("PORT", 8080))
-    
-    # Verifica se a versão do Flet tem a função 'run' (versão 1.x)
-    if hasattr(ft, "run"):
-        ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=porta)
-    else:
-        # Fallback para versões antigas (0.x)
-        ft.app(target=main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=porta)
+    ft.run(main, view=ft.AppView.WEB_BROWSER, host="0.0.0.0", port=porta)

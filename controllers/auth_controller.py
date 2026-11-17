@@ -32,19 +32,23 @@ class AuthController:
                 login_resp = self.client.auth.sign_in_with_password({"email": email, "password": senha})
                 user = login_resp.user
             except Exception as e_login:
-                # Se cair aqui, é porque o Supabase exigiu confirmação de e-mail
                 print(f"\n[Aviso] Conta criada, mas o login automático falhou: {e_login}")
                 return True, "Conta criada! Verifique seu e-mail para confirmar e depois faça login."
             
-            # 3. Salva o perfil na tabela 'perfis'
-            self.perfil_model.criar_perfil(user.id, nome)
+            # 3. Tenta salvar o perfil na tabela 'perfis' separadamente
+            # Se der erro aqui, não cancela o cadastro do usuário.
+            try:
+                self.perfil_model.criar_perfil(user.id, nome)
+            except Exception as e_perfil:
+                print(f"\n[Aviso] Usuário criado, mas erro ao salvar perfil: {e_perfil}")
+                # Mesmo sem o perfil, o login foi feito, então deixamos passar
+
             self.usuario_atual = {"id": user.id, "email": user.email}
             self.perfil = {"nome": nome}
             
             return True, "Conta criada e login realizado com sucesso!"
 
         except Exception as e:
-            # Log no Render para você identificar o erro
             print("\n" + "="*40)
             print("--- ERRO REAL DO SUPABASE AO CADASTRAR ---")
             print(e)
@@ -73,7 +77,6 @@ class AuthController:
             self.perfil = self.perfil_model.buscar_por_user_id(resp.user.id) or {"nome": "Usuário"}
             return True, "Login realizado com sucesso!"
         except Exception as e:
-            # Log no Render para você identificar o erro
             print(f"\n--- ERRO AO FAZER LOGIN --- \n{e}\n")
             return False, "E-mail ou senha inválidos."
 
